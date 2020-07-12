@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+
 #define MSJ_BIENVENIDA "\n\n\nBienvenido Padawan... Procederemos a evaluar sus condiciones...\n\n"
 
 const int TILDE_A = 160;
@@ -40,6 +41,8 @@ const float MULTIP_OSCURIDAD = 0.001117684315F;
 const float VALOR_VOL_FLOJA_BUENA = 10.3F;
 const float VALOR_VOL_MEDIA_ALTA = 54.5F;
 const float VALOR_VOL_ENORME_PELIG = 103.4F;
+const float DEF_VALOR_VOLUNTAD = 1.2F;
+const float DEF_VALOR_PASADO = 0.3F;
 const float DEF_VALOR_INGRESADO = 0.0F;
 
 const float VALOR_PASADO_NORMAL_TRAGICO = 0.4F;
@@ -49,22 +52,18 @@ const float VALOR_PASADO_BUENO = 1.5F;
 #define MSJ_MAYOR_PORCENTAJE "\n\nTransmite lo que has aprendido: fuerza, maestr%ca; pero insensatez, debilidad, fracaso tambi%cn.\n¡S%c, fracaso sobre todo! El mejor profesor, el fracaso es.\n\nBy Master Yoda\n\n"
 
 
-int main(){
-
-	char voluntad = DEFAULT_VOLUNTAD;
-
-	char pasado = DEFAULT_PASADO;
 
 
 
-	//void inicio(){
+
+	void inicio(){
 
 		printf(MSJ_BIENVENIDA);
 	
+	}
 
 
-
-	float recibir_midiclorianos();
+	float recibir_midiclorianos(){
 		float midiclorianos_recibidos = DEFAULT_MIDICLORIANOS;
 	
 		do{
@@ -79,9 +78,13 @@ int main(){
 			}
 		}while ( (midiclorianos_recibidos < MIN_MIDICLORIANOS) || (midiclorianos_recibidos > MAX_MIDICLORIANOS) );
 	
-	
+		return midiclorianos_recibidos;
 
-	char recibir_voluntad();
+	}
+
+
+
+	char recibir_voluntad(){
 		char voluntad_recibida = DEFAULT_VOLUNTAD;
 
 		do{
@@ -95,9 +98,12 @@ int main(){
 			}
 		}while ( (voluntad_recibida != VOLUNTAD_FLOJA) && (voluntad_recibida != VOLUNTAD_BUENA) && (voluntad_recibida != VOLUNTAD_MEDIA) && (voluntad_recibida != VOLUNTAD_ALTA) && (voluntad_recibida != VOLUNTAD_ENORME) && (voluntad_recibida != VOLUNTAD_PELIGROSA));
 	
+		return voluntad_recibida;
+
+	}
 
 
-	char recibir_pasado();
+	char recibir_pasado(){
 		char pasado_recibido = DEFAULT_PASADO;
 
 		do{
@@ -109,14 +115,13 @@ int main(){
 				printf(MSJ_MAL_INGRESO);
 			}
 		}while ( !(pasado_recibido == PASADO_BUENO || pasado_recibido == PASADO_NORMAL || pasado_recibido == PASADO_TRAGICO));
-	
+
+		return pasado_recibido;
+
+	}
 
 
-	
-
-
-
-	float valores_voluntad(char voluntad);
+	float valores_voluntad(char voluntad){
 		float multiplicador_voluntad = DEF_VALOR_INGRESADO;
 
 		switch(voluntad){
@@ -140,8 +145,11 @@ int main(){
 				break;
 		}
 
+		return multiplicador_voluntad;
 
-	float valores_pasado(char pasado);
+	}
+
+	float valores_pasado(char pasado){
 		float multiplicador_pasado = DEF_VALOR_INGRESADO;
 
 		switch(pasado){
@@ -156,24 +164,54 @@ int main(){
 				break;
 		}
 
+		return multiplicador_pasado;
 
-		float calculo_influencia();
-		
-		float influencia = midiclorianos_recibidos*MULTIP_INFLUENCIA;
-		
-		printf("\nSu fuerza en la influencia es: %f\n", influencia);
+	}
 
 
-	float calcular_probabilidad_convertirse(float influencia, char voluntad, char pasado);
-
-		float probabilidad_convertirse = voluntad + ((MULTIP_OSCURIDAD*influencia)/pasado);
-
-		printf("Su probabilidad de convertirse es: %f porciento.", probabilidad_convertirse);
+	float calcular_probabilidad_convertirse(float influencia, float valor_voluntad_recibida, float valor_pasado_recibido, float midiclorianos){
 
 
+		float probabilidad_convertirse = (valor_voluntad_recibida) + (MULTIP_OSCURIDAD*influencia)/(valor_pasado_recibido);
+
+		return probabilidad_convertirse;
+
+	}
+
+
+int main(){
+
+	float midiclorianos = DEFAULT_MIDICLORIANOS;
+	char voluntad = DEFAULT_VOLUNTAD;
+	char pasado = DEFAULT_PASADO;
+	float probabilidad_convertirse = 0.0F;
+
+	float valor_voluntad_recibida = 0.0F;
+	float valor_pasado_recibido = 0.0F;
+
+
+	inicio();
+
+	midiclorianos = recibir_midiclorianos();
+
+	float influencia = (midiclorianos)*MULTIP_INFLUENCIA;
+
+	voluntad = recibir_voluntad();
+
+	pasado = recibir_pasado();
+
+	valor_voluntad_recibida = valores_voluntad(voluntad);
+
+	valor_pasado_recibido = valores_pasado(pasado);
 
 	
+	printf("\nSu fuerza en la influencia es: %f\n", influencia);
+
+	probabilidad_convertirse = calcular_probabilidad_convertirse(influencia, valor_voluntad_recibida, valor_pasado_recibido, midiclorianos);
+
+	printf("Su probabilidad de convertirse es: %f porciento.", calcular_probabilidad_convertirse);
 
 	return 0;
 
 }
+
