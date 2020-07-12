@@ -51,6 +51,9 @@ const float DEF_VALOR_INGRESADO = 0.0F;
 const float VALOR_PASADO_NORMAL_TRAGICO = 0.4F;
 const float VALOR_PASADO_BUENO = 1.5F;
 
+const int PORCENTAJE_VOLUNTAD = 20;
+const int PORCENTAJE_INFLUENCIA = 75;
+
 
 #define MSJ_MAYOR_PORCENTAJE "\n\nTransmite lo que has aprendido: fuerza, maestr%ca; pero insensatez, debilidad, fracaso tambi%cn.\n¡S%c, fracaso sobre todo! El mejor profesor, el fracaso es.\n\nBy Master Yoda\n\n"
 
@@ -174,21 +177,32 @@ const float VALOR_PASADO_BUENO = 1.5F;
 
 
 	float calcular_influencia(float midiclorianos){
-
 		float influencia = (midiclorianos)*MULTIP_INFLUENCIA;
 
 		return influencia;
 
 	}
 
+
 	float calcular_probabilidad_convertirse(float influencia, float valor_voluntad_recibida, float valor_pasado_recibido){
-
-
 		float probabilidad_convertirse = valor_voluntad_recibida+(MULTIP_OSCURIDAD*influencia)/valor_pasado_recibido;
 
 		return probabilidad_convertirse;
 
 	}
+
+
+	int calcular_convertirse_jedi(float valor_voluntad_recibida, float influencia){
+		int tiempo_convertirse_jedi;
+		float voluntad_jedi = (valor_voluntad_recibida)+((valor_voluntad_recibida)*(int)PORCENTAJE_VOLUNTAD/100);
+		float influencia_jedi = (influencia)-((influencia)*(int)PORCENTAJE_INFLUENCIA/100);
+
+		tiempo_convertirse_jedi = influencia_jedi/voluntad_jedi;
+
+		return tiempo_convertirse_jedi;
+	}
+
+
 
 
 int main(){
@@ -202,12 +216,13 @@ int main(){
 	float valor_pasado_recibido = DEF_VALOR_PASADO;
 
 	float influencia = 0.0F;
+	int meses_convertirse_jedi = -1;
+
 
 	inicio();
 
 	midiclorianos = recibir_midiclorianos();
 
-	
 	voluntad = recibir_voluntad();
 
 	pasado = recibir_pasado();
@@ -219,14 +234,21 @@ int main(){
 	valor_pasado_recibido = valores_pasado(pasado);
 
 	
+
+	printf("\n\nEl an%clisis ha finalizado.\nProceda a hablar con su maestro.\n\n",TILDE_A);
+	
+	printf("\nMostrando resultados obtenidos...\n");
+
 	printf("\nSu fuerza en la influencia es: %f\n", influencia);
 
 	probabilidad_convertirse = calcular_probabilidad_convertirse(influencia, valor_voluntad_recibida, valor_pasado_recibido);
 
-	printf("Su probabilidad de convertirse es: %f porciento.", probabilidad_convertirse);
+	printf("\nSu probabilidad de convertirse al lado oscuro es: %f porciento.\n", probabilidad_convertirse);
+
+	meses_convertirse_jedi = calcular_convertirse_jedi(valor_voluntad_recibida,influencia);
+
+	printf("Tiempo restante para convertirse en Jedi: %i meses.", meses_convertirse_jedi);
 
 	return 0;
 
 }
-
-
