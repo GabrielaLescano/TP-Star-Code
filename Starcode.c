@@ -196,8 +196,8 @@ float calcular_probabilidad_convertirse(float influencia, float valor_voluntad_r
 
 int calcular_convertirse_jedi(float valor_voluntad_recibida, float influencia){
 	int tiempo_convertirse_jedi;
-	float voluntad_jedi = (valor_voluntad_recibida)+((valor_voluntad_recibida)*(int)PORCENTAJE_VOLUNTAD/100);
-	float influencia_jedi = (influencia)-((influencia)*(int)PORCENTAJE_INFLUENCIA/100);
+	int voluntad_jedi = (int)valor_voluntad_recibida+((int)valor_voluntad_recibida*PORCENTAJE_VOLUNTAD/100);
+	int influencia_jedi = (int)influencia-((int)influencia*PORCENTAJE_INFLUENCIA/100);
 
 	tiempo_convertirse_jedi = influencia_jedi/voluntad_jedi;
 
