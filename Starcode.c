@@ -37,10 +37,13 @@ const char DEFAULT_VOLUNTAD = 'z';
 const char DEFAULT_PASADO = 'y';
 
 const float MULTIP_INFLUENCIA = 3.4F;
+
 const float MULTIP_OSCURIDAD = 0.001117684315F;
+
 const float VALOR_VOL_FLOJA_BUENA = 10.3F;
 const float VALOR_VOL_MEDIA_ALTA = 54.5F;
 const float VALOR_VOL_ENORME_PELIG = 103.4F;
+
 const float DEF_VALOR_VOLUNTAD = 1.2F;
 const float DEF_VALOR_PASADO = 0.3F;
 const float DEF_VALOR_INGRESADO = 0.0F;
@@ -122,7 +125,7 @@ const float VALOR_PASADO_BUENO = 1.5F;
 
 
 	float valores_voluntad(char voluntad){
-		float multiplicador_voluntad = DEF_VALOR_INGRESADO;
+		float multiplicador_voluntad = DEF_VALOR_VOLUNTAD;
 
 		switch(voluntad){
 			case VOLUNTAD_FLOJA:
@@ -150,7 +153,7 @@ const float VALOR_PASADO_BUENO = 1.5F;
 	}
 
 	float valores_pasado(char pasado){
-		float multiplicador_pasado = DEF_VALOR_INGRESADO;
+		float multiplicador_pasado = DEF_VALOR_PASADO;
 
 		switch(pasado){
 			case PASADO_BUENO:
@@ -169,10 +172,19 @@ const float VALOR_PASADO_BUENO = 1.5F;
 	}
 
 
-	float calcular_probabilidad_convertirse(float influencia, float valor_voluntad_recibida, float valor_pasado_recibido, float midiclorianos){
+
+	float calcular_influencia(float midiclorianos){
+
+		float influencia = (midiclorianos)*MULTIP_INFLUENCIA;
+
+		return influencia;
+
+	}
+
+	float calcular_probabilidad_convertirse(float influencia, float valor_voluntad_recibida, float valor_pasado_recibido){
 
 
-		float probabilidad_convertirse = (valor_voluntad_recibida) + (MULTIP_OSCURIDAD*influencia)/(valor_pasado_recibido);
+		float probabilidad_convertirse = valor_voluntad_recibida+(MULTIP_OSCURIDAD*influencia)/valor_pasado_recibido;
 
 		return probabilidad_convertirse;
 
@@ -186,19 +198,21 @@ int main(){
 	char pasado = DEFAULT_PASADO;
 	float probabilidad_convertirse = 0.0F;
 
-	float valor_voluntad_recibida = 0.0F;
-	float valor_pasado_recibido = 0.0F;
+	float valor_voluntad_recibida = DEF_VALOR_VOLUNTAD;
+	float valor_pasado_recibido = DEF_VALOR_PASADO;
 
+	float influencia = 0.0F;
 
 	inicio();
 
 	midiclorianos = recibir_midiclorianos();
 
-	float influencia = (midiclorianos)*MULTIP_INFLUENCIA;
-
+	
 	voluntad = recibir_voluntad();
 
 	pasado = recibir_pasado();
+
+	influencia = calcular_influencia(midiclorianos);
 
 	valor_voluntad_recibida = valores_voluntad(voluntad);
 
@@ -207,11 +221,12 @@ int main(){
 	
 	printf("\nSu fuerza en la influencia es: %f\n", influencia);
 
-	probabilidad_convertirse = calcular_probabilidad_convertirse(influencia, valor_voluntad_recibida, valor_pasado_recibido, midiclorianos);
+	probabilidad_convertirse = calcular_probabilidad_convertirse(influencia, valor_voluntad_recibida, valor_pasado_recibido);
 
-	printf("Su probabilidad de convertirse es: %f porciento.", calcular_probabilidad_convertirse);
+	printf("Su probabilidad de convertirse es: %f porciento.", probabilidad_convertirse);
 
 	return 0;
 
 }
+
 
